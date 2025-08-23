@@ -7,13 +7,14 @@ const middleware = require('../middleware')
 //=========================
 router.get('/campgrounds', function(req, res) {
   //Get all Campgrounds from DB
-  Campground.find({}, function(err, Campgrounds) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.render("campgrounds/index",{campgrounds: Campgrounds, page: 'campgrounds'});
-    }
-  })
+  Campground.find({})
+    .then(Campgrounds => {
+      res.render("campgrounds/index", { campgrounds: Campgrounds, page: 'campgrounds' });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send("Error retrieving campgrounds");
+    });
 })
 //=========================
 // NEW Campground
@@ -51,16 +52,21 @@ router.post('/campgrounds', middleware.isLoggedIn, function(req, res) {
 // SHOW Campgrounds
 //=========================
 router.get('/campgrounds/:id', function(req, res) {
-  Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground) {
-    if (err || !foundCampground) {
-      req.flash('error', 'Campground not found')
-      res.redirect('/campgrounds')
-    } else {
+  Campground.findById(req.params.id)
+    .populate("comments")
+    .then(foundCampground => {
+      if (!foundCampground) {
+        req.flash('error', 'Campground not found');
+        return res.redirect('/campgrounds');
+      }
       res.render('campgrounds/show', {
         campground: foundCampground
-      })
-    }
-  })
+      });
+    })
+    .catch(err => {
+      req.flash('error', 'Campground not found');
+      res.redirect('/campgrounds');
+    });
 })
 //=========================
 // EDIT Campgrounds

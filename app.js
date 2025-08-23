@@ -65,8 +65,6 @@ app.use(indexRoutes)
 app.use(commentRoutes)
 app.use(campgroundRoutes)
 
-//seedDB()
-
 //=========================
 // Listener
 //=========================

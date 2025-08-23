@@ -1,4 +1,4 @@
-<% include ../partials/header %>
+<%- include('../partials/header') %>
 
     <div class="row">
       <div class="col-md-3">
@@ -21,7 +21,7 @@
             <p>
               <em>Submitted by: <%= campground.author.username %>, <%= moment(campground.createdAt).fromNow() %></em>
             </p>
-            <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
+            <% if(currentUser && campground.author && String(campground.author.id) === String(currentUser._id)){ %>
               <a class='btn btn-xs btn-warning' href="/campgrounds/<%= campground._id %>/edit">Edit</a>
               <form id='delete-form' action='/campgrounds/<%= campground._id %>?_method=DELETE' method="POST">
                 <button class='btn btn-xs btn-danger'>Delete</button>
@@ -42,7 +42,7 @@
                   <p>
                     <%= comment.text %>
                   </p>
-                  <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
+                  <% if(currentUser && comment.author && String(comment.author.id) === String(currentUser._id)){ %>
                   <a class="btn btn-xs btn-warning" href='/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit'>Edit</a>
                   <form id='delete-form' action='/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE' method="POST">
                       <button class='btn btn-xs btn-danger'>Delete</button>
@@ -58,4 +58,4 @@
 
 
 
-  <% include ../partials/footer %>
+  <%- include('../partials/footer') %>
